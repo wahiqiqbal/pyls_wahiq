@@ -69,3 +69,54 @@ def get_info_from_directory(directory_name):
         })
 
     return file_descriptions
+
+def formatResults(results, long_format, filetype):
+    """
+    Processes a list of file details and display options
+    to generate a list of formatted strings for output.
+
+    Parameters:
+    results = A list of dictionaries, similar to the output of get_info_from_directory()
+    long_format = A boolean flag to specify if the output should include detailed information.
+    filetype = A boolean flag to determine if an extra type indicator should be appended.
+
+    Returns:
+    A list of formatted strings.
+    """
+    assert isinstance(results, list), "This should be a list"
+    assert isinstance(long_format, bool), "Input type Boolean"
+    assert isinstance(filetype, bool), "Input type Boolean"
+
+    output_lines = []
+
+    for item in results:
+        size = str(item.get("size", 0))
+        modification_time = str(item.get("mod_time", ""))
+        name = item.get("name", "")
+        filetype_char = item.get("type", "")
+        
+        if long_format:
+            if filetype:
+                if filetype_char == 'd':
+                    name += "/"
+                elif filetype_char == 'x':
+                    name += "*"
+                output_lines.append(f"{modification_time}\t{size}\t{name}")
+            else:
+                if filetype_char == 'd':
+                    name += "/"
+                output_lines.append(f"{modification_time}\t{size}\t{name}")
+        
+        elif filetype:
+            if filetype_char == 'd':
+                name += "/"
+            elif filetype_char == 'x':
+                name += "*"
+            output_lines.append(name)
+        
+        else:
+            if filetype_char == 'd':
+                name += "/"
+            output_lines.append(name)
+
+    return output_lines
