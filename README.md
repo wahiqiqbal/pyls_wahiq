@@ -14,6 +14,26 @@ The things you need before installing the software.
 * Python installed on your workstation
 * Latest Pytest installed
 
+### How to use
+
+Just Clone the repository and then
+
+* Using the cd command, navigate to the directory of the cloned repo
+* in the shell, you can run the following commands
+```
+$ pyls
+```
+```
+$ pyls -l
+```
+```
+$ pyls -F
+```
+```
+$ pyls -l -F
+```
+
+
 If you have any further questions or suggestions, reach out to me on LinkedIn @wahiqq
 
 Thankyou
