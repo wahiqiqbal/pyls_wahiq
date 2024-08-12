@@ -120,3 +120,22 @@ def formatResults(results, long_format, filetype):
             output_lines.append(name)
 
     return output_lines
+
+def show_results(lines):
+    """
+    Accepts a list of text lines and displays them on the console.
+
+    What it takes:
+    lines = A collection of strings
+
+    What it does:
+    Outputs each string to the console
+    """
+
+    assert isinstance(lines, list), "This should be a list"
+
+    for line in lines:
+        print(line)
+
+if __name__ == '__main__':
+    main(args)
