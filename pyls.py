@@ -2,63 +2,60 @@ import os
 from datetime import datetime
 import argparse
 
-def parse_arguments():
+def main():
     parser = argparse.ArgumentParser(
         prog="pyls",
-        description="this command lists all the files in the selected directory",
-        epilog="This is a simple implementation of the `ls` command."
+        description="Lists files and directories in the current directory.",
+        epilog="This is a limited implementation of the ls command."
     )
-
+    
     parser.add_argument(
         "dirname",
-        help="Directory to list files from",
+        help="The directory to list files from.",
+        action="store",
         nargs="?",
-        default=".",
+        default="."
     )
-
+    
     parser.add_argument(
         "-F",
         "--filetype",
-        help="Append character indicating file type (e.g., / for directories, * for executables)",
-        action="store_true",
+        help="Append a character to the names indicating file type.",
+        action="store_true"
     )
-
+    
     parser.add_argument(
         "-l",
         "--long-format",
-        help="Show detailed information: modification date, size, and name",
-        action="store_true",
+        help="Show detailed information including last modified date and size.",
+        action="store_true"
     )
-
-    return parser.parse_args()
-
-def main():
-    args = parse_arguments()
+    
+    args = parser.parse_args()
+    
     file_lines = get_info_from_directory(args.dirname)
     formatted_results = format_results(file_lines, args.long_format, args.filetype)
     show_results(formatted_results)
 
 def get_info_from_directory(directory_name):
-    if not os.path.isdir(directory_name):
-        raise NotADirectoryError(f"{directory_name} is not a valid directory")
+    assert os.path.isdir(directory_name), "directory_name should be an existing directory"
 
     file_descriptions = []
     for item in os.listdir(directory_name):
         full_path = os.path.join(directory_name, item)
-
         if os.path.isdir(full_path):
             type_of_file = "d"
             size_of_file = 0
         elif os.path.isfile(full_path):
             type_of_file = "f"
             size_of_file = os.path.getsize(full_path)
-            if os.access(full_path, os.X_OK):
-                type_of_file = "x"
         else:
             continue
 
-        modification_time = datetime.fromtimestamp(os.path.getmtime(full_path)).strftime("%Y-%m-%d %H:%M:%S")
+        if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+            type_of_file = "x"
 
+        modification_time = datetime.fromtimestamp(os.path.getmtime(full_path)).replace(microsecond=0)
         file_descriptions.append({
             "mod_time": modification_time,
             "size": size_of_file,
@@ -69,24 +66,11 @@ def get_info_from_directory(directory_name):
     return file_descriptions
 
 def format_results(results, long_format, filetype):
-    """
-    Processes a list of file details and display options
-    to generate a list of formatted strings for output.
-
-    Parameters:
-    results = A list of dictionaries, similar to the output of get_info_from_directory()
-    long_format = A boolean flag to specify if the output should include detailed information.
-    filetype = A boolean flag to determine if an extra type indicator should be appended.
-
-    Returns:
-    A list of formatted strings.
-    """
     assert isinstance(results, list), "This should be a list"
     assert isinstance(long_format, bool), "Input type Boolean"
     assert isinstance(filetype, bool), "Input type Boolean"
 
     output_lines = []
-
     for item in results:
         name = item["name"]
         if filetype:
@@ -106,9 +90,8 @@ def format_results(results, long_format, filetype):
 
     return output_lines
 
-
-
 def show_results(lines):
+    assert isinstance(lines, list), "This should be a list"
     for line in lines:
         print(line)
 
