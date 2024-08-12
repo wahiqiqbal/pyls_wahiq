@@ -69,6 +69,22 @@ def get_info_from_directory(directory_name):
     return file_descriptions
 
 def format_results(results, long_format, filetype):
+    """
+    Processes a list of file details and display options
+    to generate a list of formatted strings for output.
+
+    Parameters:
+    results = A list of dictionaries, similar to the output of get_info_from_directory()
+    long_format = A boolean flag to specify if the output should include detailed information.
+    filetype = A boolean flag to determine if an extra type indicator should be appended.
+
+    Returns:
+    A list of formatted strings.
+    """
+    assert isinstance(results, list), "This should be a list"
+    assert isinstance(long_format, bool), "Input type Boolean"
+    assert isinstance(filetype, bool), "Input type Boolean"
+
     output_lines = []
 
     for item in results:
@@ -81,12 +97,16 @@ def format_results(results, long_format, filetype):
 
         if long_format:
             size = str(item["size"])
-            modification_time = item["mod_time"]
+            modification_time = item["mod_time"].strftime("%Y-%m-%d %H:%M:%S")
+            if item["type"] == 'd' and not filetype:
+                name += "/"
             output_lines.append(f"{modification_time}\t{size}\t{name}")
         else:
             output_lines.append(name)
 
     return output_lines
+
+
 
 def show_results(lines):
     for line in lines:
