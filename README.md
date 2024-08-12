@@ -1,6 +1,6 @@
 # Project Title
 
-This Repository is part of the assignment of my course COMP350 "Software Design Practical" (T7).
+This Repository is part of an assignment of my course COMP350 "Software Design Practical" (T7).
 
 ## Getting Started
 
